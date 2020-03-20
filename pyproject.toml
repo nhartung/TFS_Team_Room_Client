@@ -7,6 +7,7 @@ authors = ["Nick Hartung <nickhartung@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.8"
 requests = "^2.23.0"
+requests_ntlm = "^1.1.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
