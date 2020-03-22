@@ -1,26 +1,50 @@
+import curses
 from getpass import getpass
 import json
+import msvcrt
 import requests
 from requests_ntlm import HttpNtlmAuth
 
-from back_end.tfs_rest import (
-    get_session,
-    get_available_rooms,
-    get_room_messages
-)
+from core.core import Core
+
+class CLI_Manager():
+    def __init__(self, room_window):
+        self.rooms = []
+        self.room_window = room_window
+        pass
+
+    def rooms_callback(self, rooms):
+        self.rooms = rooms
+        self._update_room_list()
+
+    def _update_room_list(self):
+        self.room_window.clear()
+        y = 0
+        for key in self.rooms:
+            self.room_window.addstr(y, 0, self.rooms[key].name)
+            y += 1
+        self.room_window.refresh()
 
 def main():
-    BASE_URL = 'http://hv-tfs:8080/tfs/Engineering Organization/'
     username = input('Username: ACA\\')
     password = getpass()
+    curses.wrapper(cli_main, username, password)
 
-    session = get_session(username, password)
-    rooms = get_available_rooms(session, BASE_URL)
-    print('Hello TFS Rooms.')
-    for room in rooms:
-        print(str(room['id']) + ': ' + room['name'])
+def cli_main(stdscr, username, password):
+    room_window = curses.newwin(10, 30, 0, 0)
+    room_window.clear()
 
-    messages = get_room_messages(session, BASE_URL, 34)
-    print('Hello TFS Messages.')
-    for message in messages:
-        print(str(message['postedBy']['displayName']) + ': ' + message['content'])
+    core = Core(username, password, CLI_Manager(room_window))
+
+    # Debug code for now, ensuring that we can kill the multi-threaded app.
+    while True:
+        if msvcrt.kbhit():
+            key = ord( msvcrt.getch() )
+            if(key == ord('k')):
+                print('Killing application...')
+                core.stop()
+                break
+    #  messages = get_room_messages(session, BASE_URL, 34)
+    #  print('Hello TFS Messages.')
+    #  for message in messages:
+        #  print(str(message['postedBy']['displayName']) + ': ' + message['content'])
