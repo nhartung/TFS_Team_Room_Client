@@ -2,6 +2,18 @@ import requests
 from requests_ntlm import HttpNtlmAuth
 import sys
 
+class TFS_Chat_Exception(Exception):
+    pass
+
+class HTTP_Request_Exception(TFS_Chat_Exception):
+    pass
+
+class Connection_Error(HTTP_Request_Exception):
+    pass
+
+class Invalid_Response(HTTP_Request_Exception):
+    pass
+
 def _get_request(session, url):
     data = None
     try:
@@ -10,10 +22,13 @@ def _get_request(session, url):
         data = response.json()
     except requests.exceptions.ConnectionError:
         print('Unable to establish a connection.', file=sys.stderr)
+        raise Connection_Error()
     except requests.exceptions.HTTPError as e:
         print('Invalid HTTP Response: ' + str(e), file=sys.stderr)
+        raise Invalid_Response()
     except Exception as e:
         print('An unknown error has occured: ' + str(type(e)) + ': ' + str(e), file=sys.stderr)
+        raise TFS_Chat_Exception()
     return data
 
 def get_session(username, password):

@@ -86,11 +86,78 @@ version = "0.5.0"
 
 [[package]]
 category = "main"
+description = "Docutils -- Python Documentation Utilities"
+name = "docutils"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+version = "0.16"
+
+[[package]]
+category = "main"
 description = "Internationalized Domain Names in Applications (IDNA)"
 name = "idna"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 version = "2.9"
+
+[[package]]
+category = "dev"
+description = "Read metadata from Python packages"
+marker = "python_version < \"3.8\""
+name = "importlib-metadata"
+optional = false
+python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
+version = "1.6.0"
+
+[package.dependencies]
+zipp = ">=0.5"
+
+[package.extras]
+docs = ["sphinx", "rst.linker"]
+testing = ["packaging", "importlib-resources"]
+
+[[package]]
+category = "main"
+description = "A software library for rapid development of hardware-accelerated multitouch applications."
+name = "kivy"
+optional = false
+python-versions = "*"
+version = "1.11.1"
+
+[package.dependencies]
+Kivy-Garden = ">=0.1.4"
+docutils = "*"
+pygments = "*"
+
+[package.extras]
+tuio = ["oscpy"]
+
+[[package]]
+category = "main"
+description = "Repackaged binary dependency of Kivy."
+name = "kivy-deps.glew"
+optional = false
+python-versions = "*"
+version = "0.1.12"
+
+[[package]]
+category = "main"
+description = "Repackaged binary dependency of Kivy."
+name = "kivy-deps.sdl2"
+optional = false
+python-versions = "*"
+version = "0.1.23"
+
+[[package]]
+category = "main"
+description = "Garden tool for kivy flowers."
+name = "kivy-garden"
+optional = false
+python-versions = "*"
+version = "0.1.4"
+
+[package.dependencies]
+requests = "*"
 
 [[package]]
 category = "dev"
@@ -131,6 +198,11 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 version = "0.13.1"
 
+[package.dependencies]
+[package.dependencies.importlib-metadata]
+python = "<3.8"
+version = ">=0.12"
+
 [package.extras]
 dev = ["pre-commit", "tox"]
 
@@ -149,6 +221,14 @@ name = "pycparser"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 version = "2.20"
+
+[[package]]
+category = "main"
+description = "Pygments is a syntax highlighting package written in Python."
+name = "pygments"
+optional = false
+python-versions = ">=3.5"
+version = "2.6.1"
 
 [[package]]
 category = "dev"
@@ -175,6 +255,10 @@ packaging = "*"
 pluggy = ">=0.12,<1.0"
 py = ">=1.5.0"
 wcwidth = "*"
+
+[package.dependencies.importlib-metadata]
+python = "<3.8"
+version = ">=0.12"
 
 [package.extras]
 checkqa-mypy = ["mypy (v0.761)"]
@@ -248,9 +332,22 @@ optional = false
 python-versions = "*"
 version = "2.1.0"
 
+[[package]]
+category = "dev"
+description = "Backport of pathlib-compatible object wrapper for zip files"
+marker = "python_version < \"3.8\""
+name = "zipp"
+optional = false
+python-versions = ">=3.6"
+version = "3.1.0"
+
+[package.extras]
+docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
+testing = ["jaraco.itertools", "func-timeout"]
+
 [metadata]
-content-hash = "7e7a574190fd2eb205f041671750dd855d441baeb982d867a1b05054e004679a"
-python-versions = "^3.8"
+content-hash = "fda687023f275ee33fb547b466bf62918694779b401b90c894ff29ef913701bf"
+python-versions = "^3.7"
 
 [metadata.files]
 atomicwrites = [
@@ -329,9 +426,61 @@ cryptography = [
 curses-menu = [
     {file = "curses-menu-0.5.0.zip", hash = "sha256:29c45e2f16283833e2940fac0fd64e948f2ff603d3e11f510c5bd2b946cd8981"},
 ]
+docutils = [
+    {file = "docutils-0.16-py2.py3-none-any.whl", hash = "sha256:0c5b78adfbf7762415433f5515cd5c9e762339e23369dbe8000d84a4bf4ab3af"},
+    {file = "docutils-0.16.tar.gz", hash = "sha256:c2de3a60e9e7d07be26b7f2b00ca0309c207e06c100f9cc2a94931fc75a478fc"},
+]
 idna = [
     {file = "idna-2.9-py2.py3-none-any.whl", hash = "sha256:a068a21ceac8a4d63dbfd964670474107f541babbd2250d61922f029858365fa"},
     {file = "idna-2.9.tar.gz", hash = "sha256:7588d1c14ae4c77d74036e8c22ff447b26d0fde8f007354fd48a7814db15b7cb"},
+]
+importlib-metadata = [
+    {file = "importlib_metadata-1.6.0-py2.py3-none-any.whl", hash = "sha256:2a688cbaa90e0cc587f1df48bdc97a6eadccdcd9c35fb3f976a09e3b5016d90f"},
+    {file = "importlib_metadata-1.6.0.tar.gz", hash = "sha256:34513a8a0c4962bc66d35b359558fd8a5e10cd472d37aec5f66858addef32c1e"},
+]
+kivy = [
+    {file = "Kivy-1.11.1-cp27-cp27m-macosx_10_6_intel.macosx_10_9_intel.macosx_10_9_x86_64.macosx_10_10_intel.macosx_10_10_x86_64.whl", hash = "sha256:11e85eaf6efbfa2362a3334ffdad179a1b0ca8d255cca79eaa6a2765560d4982"},
+    {file = "Kivy-1.11.1-cp27-cp27m-win32.whl", hash = "sha256:5c3d0f2749522d62e9cce09cd54b2d823bf1b6b644ff1f627be49de6f3e3cba0"},
+    {file = "Kivy-1.11.1-cp27-cp27m-win_amd64.whl", hash = "sha256:f835462dd9aa491272552ef079b948a088598e2e95d68bb1d885d2c3f3d4e2c3"},
+    {file = "Kivy-1.11.1-cp35-cp35m-macosx_10_6_intel.macosx_10_9_intel.macosx_10_9_x86_64.macosx_10_10_intel.macosx_10_10_x86_64.whl", hash = "sha256:090d3ded9835a17477cd93fbdaf0a7c42ff2218981cf198ded5ad8795bc74391"},
+    {file = "Kivy-1.11.1-cp35-cp35m-manylinux2010_x86_64.whl", hash = "sha256:b85ccf165050cbf2ee8447671eebbc222b369b40f0e0038dd9547d49a5e37373"},
+    {file = "Kivy-1.11.1-cp35-cp35m-win32.whl", hash = "sha256:4a5480cbf837d3780c77a4f61b32b56d22ae9f03845e7a89dd3eaef1ae5fd037"},
+    {file = "Kivy-1.11.1-cp35-cp35m-win_amd64.whl", hash = "sha256:a687602d90c4629dd036f577ca39acb76ba581370f9d915f3cab99be818ba8ad"},
+    {file = "Kivy-1.11.1-cp36-cp36m-macosx_10_6_intel.macosx_10_9_intel.macosx_10_9_x86_64.macosx_10_10_intel.macosx_10_10_x86_64.whl", hash = "sha256:c36652caa7f6c327dee834cfc699d5962d346b7a53e54bd81abc17c314226d89"},
+    {file = "Kivy-1.11.1-cp36-cp36m-manylinux2010_x86_64.whl", hash = "sha256:b7ef6aad43a86d8df3fb865db864e354f2155a748019f8517f69f65c1a29cb64"},
+    {file = "Kivy-1.11.1-cp36-cp36m-win32.whl", hash = "sha256:f3bea6e4a21991827885d04127fc6d09a0e974ecfa12da7bf5faae93562ea102"},
+    {file = "Kivy-1.11.1-cp36-cp36m-win_amd64.whl", hash = "sha256:ece170514db3f49844a41e4c910ad9ce9bc46da6f47a49158e11266bdcc6e479"},
+    {file = "Kivy-1.11.1-cp37-cp37m-macosx_10_6_intel.macosx_10_9_intel.macosx_10_9_x86_64.macosx_10_10_intel.macosx_10_10_x86_64.whl", hash = "sha256:8819a27a09871af451760cb69486ced52e830c8a0a37480f22ef5e692f12c05b"},
+    {file = "Kivy-1.11.1-cp37-cp37m-manylinux2010_x86_64.whl", hash = "sha256:1a1ff32f8a95f1e175198cbab81fcd2596783b180d4eafe63e87d171aa7fdb5e"},
+    {file = "Kivy-1.11.1-cp37-cp37m-win32.whl", hash = "sha256:815a5c0b3b72fcd81ca7b2aa0744087163ed03e4cf9ab4e7c9733cea99fc1571"},
+    {file = "Kivy-1.11.1-cp37-cp37m-win_amd64.whl", hash = "sha256:1d28b198a64c30db8d94a0488e85f3037af60d514ab0d7ad5ab45add3ab77090"},
+    {file = "Kivy-1.11.1.tar.gz", hash = "sha256:4d0e596f74271e901b551f77661dde238df4765484fce9f5d1c72e8022984e84"},
+]
+"kivy-deps.glew" = [
+    {file = "kivy_deps.glew-0.1.12-cp27-cp27m-win32.whl", hash = "sha256:92e72fa2c425887987d1aa861c99537033dc20d68ae1c54864871f0401682586"},
+    {file = "kivy_deps.glew-0.1.12-cp27-cp27m-win_amd64.whl", hash = "sha256:c843104690c0c8f3a58105c53c57f31506f6f90562c18de00bd19317cc1045a7"},
+    {file = "kivy_deps.glew-0.1.12-cp35-cp35m-win32.whl", hash = "sha256:ee8ab67abb2c98d84feede657cae472e7723e529af07394244bdd33caafb1a38"},
+    {file = "kivy_deps.glew-0.1.12-cp35-cp35m-win_amd64.whl", hash = "sha256:ab81783a82bef88a8d2bcf8a93bc21df6b8b0db6ee551eb802727d18f9074b17"},
+    {file = "kivy_deps.glew-0.1.12-cp36-cp36m-win32.whl", hash = "sha256:45aa7f0e8d9bcf5fc1810c9c38bc20edf7dee61df81ecf62102e0f84153f924a"},
+    {file = "kivy_deps.glew-0.1.12-cp36-cp36m-win_amd64.whl", hash = "sha256:ef1116d99bd9cc737cb8c0e13e676955c17d6e4d6d1af5cfccef089a430071bb"},
+    {file = "kivy_deps.glew-0.1.12-cp37-cp37m-win32.whl", hash = "sha256:1e28e40017af9d081fc0fc95b4fadaf31d15e9f63478dcee1c4257d67079894e"},
+    {file = "kivy_deps.glew-0.1.12-cp37-cp37m-win_amd64.whl", hash = "sha256:6bb435620c3187d2c61054adb9ec277ed487256b457a0a7b1491bc0cb7247e18"},
+    {file = "kivy_deps.glew-0.1.12-cp38-cp38-win32.whl", hash = "sha256:09f72ee5ef33ff273332e2a229dc97d650d29818a0189339421949e4e0f63d93"},
+    {file = "kivy_deps.glew-0.1.12-cp38-cp38-win_amd64.whl", hash = "sha256:cf351aad171796f8051af8e49ec430a9aa128d8557d8643e73f2bb1e5f9c2dab"},
+]
+"kivy-deps.sdl2" = [
+    {file = "kivy_deps.sdl2-0.1.23-cp35-cp35m-win32.whl", hash = "sha256:879db11eb3999b4682a6f2458a8741a99dfd6b977266e4333f539084d08f4bd9"},
+    {file = "kivy_deps.sdl2-0.1.23-cp35-cp35m-win_amd64.whl", hash = "sha256:3473d59b9a02f942432a04664bf2e8170e755056b5e1279dc7471723145c6649"},
+    {file = "kivy_deps.sdl2-0.1.23-cp36-cp36m-win32.whl", hash = "sha256:da37157b6aaf658053445519d63bd586aceb0d256183481961e33d7eee4697eb"},
+    {file = "kivy_deps.sdl2-0.1.23-cp36-cp36m-win_amd64.whl", hash = "sha256:4deb64ce22ad480d0802483841a81562f5c5df101b268b0dde7bf85518cf38fd"},
+    {file = "kivy_deps.sdl2-0.1.23-cp37-cp37m-win32.whl", hash = "sha256:2ddad419c6fdc040b78a654218dbffeb61e83b860607e7feaf3e40c00c3e253b"},
+    {file = "kivy_deps.sdl2-0.1.23-cp37-cp37m-win_amd64.whl", hash = "sha256:279cba34c8084e81908a5339c35420a20cac68f21b136caa110661c60054042b"},
+    {file = "kivy_deps.sdl2-0.1.23-cp38-cp38-win32.whl", hash = "sha256:8c0d381f01e5336a9dcd0bfe33b5a4be69464b69248b57e44740b3f365bc13e6"},
+    {file = "kivy_deps.sdl2-0.1.23-cp38-cp38-win_amd64.whl", hash = "sha256:26fc22b3b81108b3884a0ab6f16b02e994f0b988d1741198872f94e701656f13"},
+]
+kivy-garden = [
+    {file = "Kivy Garden-0.1.4.tar.gz", hash = "sha256:9b7d9de5efacbcd0c4b3dd873b30622a86093c9965aa47b523c7a32f3eb34610"},
+    {file = "kivy-garden-0.1.4.tar.gz", hash = "sha256:c256f42788421273a08fbb0a228f0fb0e80dd86b629fb8c0920507f645be6c72"},
 ]
 more-itertools = [
     {file = "more-itertools-8.2.0.tar.gz", hash = "sha256:b1ddb932186d8a6ac451e1d95844b382f55e12686d51ca0c68b6f61f2ab7a507"},
@@ -356,6 +505,10 @@ py = [
 pycparser = [
     {file = "pycparser-2.20-py2.py3-none-any.whl", hash = "sha256:7582ad22678f0fcd81102833f60ef8d0e57288b6b5fb00323d101be910e35705"},
     {file = "pycparser-2.20.tar.gz", hash = "sha256:2d475327684562c3a96cc71adf7dc8c4f0565175cf86b6d7a404ff4c771f15f0"},
+]
+pygments = [
+    {file = "Pygments-2.6.1-py3-none-any.whl", hash = "sha256:ff7a40b4860b727ab48fad6360eb351cc1b33cbf9b15a0f689ca5353e9463324"},
+    {file = "Pygments-2.6.1.tar.gz", hash = "sha256:647344a061c249a3b74e230c739f434d7ea4d8b1d5f3721bc0f3558049b38f44"},
 ]
 pyparsing = [
     {file = "pyparsing-2.4.6-py2.py3-none-any.whl", hash = "sha256:c342dccb5250c08d45fd6f8b4a559613ca603b57498511740e65cd11a2e7dcec"},
@@ -396,4 +549,8 @@ windows-curses = [
     {file = "windows_curses-2.1.0-cp37-cp37m-win_amd64.whl", hash = "sha256:ff8c67f74b88944d99fa9d22971c05c335bc74f149120f0a69340c2c3a595497"},
     {file = "windows_curses-2.1.0-cp38-cp38-win32.whl", hash = "sha256:66034dc9a705d87308cc9ea90836f4ee60008a1d5e2c1d34ace627f60268158b"},
     {file = "windows_curses-2.1.0-cp38-cp38-win_amd64.whl", hash = "sha256:261fde5680d1ce4ce116908996b9a3cfb0ffb03ea68d42240f62b56a9fa6af2c"},
+]
+zipp = [
+    {file = "zipp-3.1.0-py3-none-any.whl", hash = "sha256:aa36550ff0c0b7ef7fa639055d797116ee891440eac1a56f378e2d3179e0320b"},
+    {file = "zipp-3.1.0.tar.gz", hash = "sha256:c599e4d75c98f6798c509911d08a22e6c021d074469042177c8c86fb92eefd96"},
 ]

@@ -1,0 +1,37 @@
+<LoginScreen>:
+   f_username: username
+   f_password: password
+   f_button: button
+   GridLayout:
+      rows: 4
+      cols: 1
+      Widget:
+         size_hint: 1, 1
+      GridLayout:
+         size_hint: 0.5, 0.5
+         rows: 2
+         cols: 2
+         padding: 10
+         spacing: 10
+         Label:
+            text: 'User Name:'
+            size_hint: 0.1, 1
+         TextInput:
+            id: username
+            multiline: False
+            write_tab: False
+         Label:
+            text: 'Password:'
+            size_hint: 0.1, 1
+         TextInput:
+            id: password
+            multiline: False
+            write_tab: False
+            password: True
+      Button:
+         size_hint: 0.25, 0.25
+         text: 'Login'
+         id: button
+         on_press: root._login()
+      Widget:
+         size_hint: 1, 1
