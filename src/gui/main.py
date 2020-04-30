@@ -24,10 +24,17 @@ class TFS_ChatApp(App):
 class GUI_Manager():
     def __init__(self):
         self.rooms = []
+        self.messages_queue = None
 
     def rooms_callback(self, rooms):
         self.rooms = rooms
         chat_screen.set_rooms(self.rooms)
+
+    def get_room_function(self):
+        return chat_screen.get_room_id()
+
+    def messages_callback(self, messages):
+        chat_screen.set_messages(messages)
 
     def login_ready_function(self):
         return login_screen.entry_ready
@@ -41,6 +48,9 @@ class GUI_Manager():
     def login_failure_callback(self, reason):
         print("Reason: " + reason)
         login_screen.entry_ready = False
+
+    def set_message_queue(self, queue):
+        chat_screen.set_message_queue(queue)
 
 def main():
     manager = GUI_Manager()

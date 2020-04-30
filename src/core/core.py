@@ -1,4 +1,6 @@
+import datetime
 from threading import Thread, Event
+from queue import Queue, Empty
 
 from back_end.tfs_rest import (
     TFS_Chat_Exception,
@@ -6,7 +8,13 @@ from back_end.tfs_rest import (
     Invalid_Response,
     get_session,
     get_available_rooms,
-    get_room_messages
+    get_room_info,
+    get_room_messages,
+    get_my_user_id,
+    get_users,
+    join_room,
+    leave_room,
+    send_message
 )
 
 from core.room import Room
@@ -24,23 +32,16 @@ class Core(Thread):
             self.callback_obj.login_ready_function, 
             self._login_success, 
             self._login_failure)
+        self.get_rooms_thread = None
+        self.get_messages_thread = None
         self.get_rooms_event = Event()
+        self.get_messages_event = Event()
+        self.send_messages_event = Event()
         self.session = None
+
+        self.messages_queue = Queue()
+        callback_obj.set_message_queue(self.messages_queue)
         
-    def run(self):
-        self.login_thread.start()
-
-        while not self.login_event.wait(1):
-            pass
-
-        self.get_rooms_thread = Get_Rooms_Thread(
-            self.get_rooms_event, 
-            self.session, 
-            self.callback_obj.rooms_callback)
-        self.get_rooms_thread.start()
-        while not self.stopped.wait(1):
-            pass
-
     def _login_success(self):
         self.session = self.login_thread.session
         self.callback_obj.login_success_callback()
@@ -49,11 +50,60 @@ class Core(Thread):
     def _login_failure(self, reason):
         self.callback_obj.login_failure_callback(reason)
 
+    def run(self):
+        self._login()
+
+        if not self.stopped.isSet():
+            self._start_chat_threads()
+
+        self._wait_for_app_end()
+
+    def _login(self):
+        self.login_thread.start()
+        self._wait_for_login()
+
+    def _wait_for_login(self):
+        while not self.login_event.wait(1):
+            pass
+
+    def _start_chat_threads(self):
+        self.get_rooms_thread = Get_Rooms_Thread(
+            self.get_rooms_event, 
+            self.session, 
+            self.callback_obj.rooms_callback)
+        self.get_rooms_thread.start()
+
+        self.get_messages_thread = Get_Messages_Thread(
+            self.get_messages_event,
+            self.session,
+            self.callback_obj.get_room_function,
+            self.callback_obj.messages_callback)
+        self.get_messages_thread.start()
+
+        self.send_messages_thread = Send_Messages_Thread(
+            self.send_messages_event,
+            self.session,
+            self.messages_queue,
+            self.callback_obj.get_room_function)
+        self.send_messages_thread.start()
+
+    def _wait_for_app_end(self):
+        while not self.stopped.wait(1):
+            pass
+
     def stop(self):
         self.login_event.set()
         self.get_rooms_event.set()
-        self.login_thread.join()
-        self.get_rooms_thread.join()
+        self.get_messages_event.set()
+        self.send_messages_event.set()
+        if self.login_thread and self.login_thread.is_alive():
+            self.login_thread.join()
+        if self.get_rooms_thread and self.get_rooms_thread.is_alive():
+            self.get_rooms_thread.join()
+        if self.get_messages_thread and self.get_messages_thread.is_alive():
+            self.get_messages_thread.join()
+        if self.send_messages_thread and self.send_messages_thread.is_alive():
+            self.send_messages_thread.join()
         self.stopped.set()
 
 class Login_Thread(Thread):
@@ -122,3 +172,81 @@ class Get_Rooms_Thread(Thread):
             room = Room(entry['name'], entry['description'], entry['lastActivity'])
             d[entry['id']] = room
         return d
+
+class Get_Messages_Thread(Thread):
+    def __init__(self, event, session, get_room_func, callback_func):
+        Thread.__init__(self)
+        self.stopped = event
+        self.session = session
+        self.get_room_func = get_room_func
+        self.callback_func = callback_func
+        self.last_room_update = datetime.date(1970, 1, 1)
+        self.room_id = None
+
+    def run(self):
+        while not self.stopped.wait(1):
+            last_room_id = self.room_id
+            self.room_id = self.get_room_func()
+            if self.room_id is not None:
+                if last_room_id == self.room_id:
+                    self._get_updated_text()
+                else:
+                    # New Room
+                    user_id = get_my_user_id(self.session, BASE_URL)
+                    if last_room_id is not None:
+                        self._leave_room(last_room_id, user_id)
+                    self._join_room(user_id)
+                    self._get_room_text()
+            else:
+                # Do nothing when a room isn't selected
+                pass
+
+    def _get_updated_text(self):
+        last_update_time = self._get_last_update_time()
+        if self.last_room_update != last_update_time:
+            self.last_room_update = last_update_time
+            messages = get_room_messages(self.session, BASE_URL, self.room_id)
+            self.callback_func(messages)
+
+    def _get_room_text(self):
+        last_update_time = self._get_last_update_time()
+        self.last_room_update = last_update_time
+        messages = get_room_messages(self.session, BASE_URL, self.room_id)
+        self.callback_func(messages)
+
+    def _get_last_update_time(self):
+        latest_update = get_room_info(self.session, BASE_URL, self.room_id)['lastActivity']
+        last_update_time = (
+            datetime.datetime.strptime(latest_update,'%Y-%m-%dT%H:%M:%S.%fZ'))
+        return last_update_time
+    
+    def _join_room(self, user_id):
+        try:
+            join_room(self.session, BASE_URL, self.room_id, user_id)
+        except TFS_Chat_Exception:
+            print("Failed to join room!")
+
+    def _leave_room(self, room_id, user_id):
+        try:
+            leave_room(self.session, BASE_URL, room_id, user_id)
+        except TFS_Chat_Exception:
+            print("Failed to leave room!")
+
+class Send_Messages_Thread(Thread):
+    def __init__(self, event, session, queue, get_room_func):
+        Thread.__init__(self)
+        self.get_room_func = get_room_func
+        self.stopped = event
+        self.session = session
+        self.queue = queue
+
+    def run(self):
+        while not self.stopped.wait(0.1):
+            try:
+                message = self.queue.get(block=True, timeout=1)
+                send_message(self.session, BASE_URL, self.get_room_func(), message)
+                self.queue.task_done()
+            except Empty:
+                # This exception is part of the normal flow is the user has not
+                # sent a message in the last timeout period. Simply passing.
+                pass

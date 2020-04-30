@@ -8,15 +8,86 @@
       padding: 10
       spacing: 10
       BoxLayout:
-         size_hint: 0.5, 1
+         size_hint: 0.25, 1
          id: chat_rooms
          orientation: 'vertical'
          text: 'Test'
       BoxLayout:
+         size_hint: 1, 1
          id: chat_room_content
          orientation: 'vertical'
          text: 'Test'
       BoxLayout:
+         size_hint: 0.25, 1
          id: chat_room_users
          orientation: 'vertical'
          text: 'Test'
+
+<SelectableLabel>:
+    # Draw a background to indicate selection
+   canvas.before:
+      Color:
+         rgba: (.0, 0.9, .1, .3) if self.selected else (0, 0, 0, 1)
+      Rectangle:
+         pos: self.pos
+         size: self.size
+
+<RoomListRV>:
+   rv_layout: layout
+   viewclass: 'SelectableLabel'
+   SelectableRecycleBoxLayout:
+      id: layout
+      default_size: None, dp(40),
+      default_size_hint: 1.0, None
+      size_hint_y: None
+      height: self.minimum_height
+      orientation: 'vertical'
+
+<EntryWidget>
+   ew_text: text
+   orientation: 'horizontal'
+   height: dp(40)
+   TextInput:
+      id: text
+      size_hint: 1, None
+      height: dp(80)
+   Button:
+      height: dp(80)
+      size_hint: 0.25, None
+      text: 'Send'
+      id: button
+      on_press: root._send_message()
+   
+<ChatLabel>:
+   cl_username: username
+   cl_text: text
+   cl_timestamp: timestamp
+   height: self.cl_text.height
+   GridLayout:
+      rows: 1
+      cols: 3
+      Label:
+         id: username
+         size_hint: 0.25, 1
+      Label:
+         id: text
+         size_hint: 1, None
+         text_size: self.width, None
+         height: self.texture_size[1]
+      Label:
+         id: timestamp
+         size_hint: 0.25, 1
+
+<MessageListRV>:
+   rv_layout: layout
+   viewclass: 'ChatLabel'
+   padding: 20
+   RecycleBoxLayout:
+      id: layout
+      # default_size: None, dp(40),
+      default_size_hint: 1.0, None
+      size_hint_y: None
+      spacing: 10
+      height: self.minimum_height
+      orientation: 'vertical'
+
