@@ -1,4 +1,3 @@
-import curses
 from getpass import getpass
 import json
 import msvcrt
@@ -8,9 +7,8 @@ from requests_ntlm import HttpNtlmAuth
 from core.core import Core
 
 class CLI_Manager():
-    def __init__(self, room_window):
+    def __init__(self):
         self.rooms = []
-        self.room_window = room_window
         pass
 
     def rooms_callback(self, rooms):
@@ -28,13 +26,10 @@ class CLI_Manager():
 def main():
     username = input('Username: ACA\\')
     password = getpass()
-    curses.wrapper(cli_main, username, password)
 
-def cli_main(stdscr, username, password):
-    room_window = curses.newwin(10, 30, 0, 0)
-    room_window.clear()
-
-    core = Core(username, password, CLI_Manager(room_window))
+    print("TODO!")
+    return
+    #  core = Core(CLI_Manager())
 
     # Debug code for now, ensuring that we can kill the multi-threaded app.
     while True:
