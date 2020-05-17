@@ -4,7 +4,9 @@ from kivy.factory import Factory
 
 from kivy.lang.builder import Builder
 
-from kivy.properties import BooleanProperty, ListProperty, StringProperty, ObjectProperty
+from kivy.event import EventDispatcher
+from kivy.graphics import Color
+from kivy.properties import BooleanProperty, StringProperty, ObjectProperty, ListProperty
 
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
@@ -47,11 +49,11 @@ class SelectableLabel(RecycleDataViewBehavior, Label):
         ''' Respond to the selection of items in the view. '''
         self.selected = is_selected
         if is_selected:
-            print("selection changed to {0}".format(rv.data[index]))
             global selected_room_id
             selected_room_id = rv.data[index]['room_id']
-        else:
-            print("selection removed for {0}".format(rv.data[index]))
+
+class UserLabel(Label, EventDispatcher):
+    lcolor = ListProperty([0.5, 0.5, 0.5, 1])
 
 class RoomListRV(RecycleView):
     rv_layout = ObjectProperty(None)
@@ -60,8 +62,12 @@ class RoomListRV(RecycleView):
         super(RoomListRV, self).__init__(**kwargs)
         self.data = [{}]
 
-#  class ChatLabel(BoxLayout):
-    #  pass
+class UserListRV(RecycleView):
+    rv_layout = ObjectProperty(None)
+
+    def __init__(self, **kwargs):
+        super(UserListRV, self).__init__(**kwargs)
+        self.data = [{}]
 
 class ChatLabel(RecycleDataViewBehavior, BoxLayout):
     ''' Add selection support to the Label '''
@@ -74,8 +80,7 @@ class ChatLabel(RecycleDataViewBehavior, BoxLayout):
             self.cl_username.text = data['username']
             self.cl_text.text = data['text']
             self.cl_timestamp.text = self._get_timestamp(data['timestamp'])
-        return super(ChatLabel, self).refresh_view_attrs(
-            rv, index, data)
+            return super(ChatLabel, self).refresh_view_attrs(rv, index, data)
 
     def _get_timestamp(self, string):
         match = re.search('.*T(.*)\..*', string)
@@ -107,13 +112,27 @@ class ChatWindowScreen(Screen):
         super(ChatWindowScreen, self).__init__(**kwargs)
         self.entry_widget = EntryWidget()
         self.room_list_rv = RoomListRV()
+        self.user_list_rv = UserListRV()
         self.message_list_rv = MessageListRV()
         self.f_chat_rooms.add_widget(self.room_list_rv)
         self.f_chat_room_content.add_widget(self.message_list_rv)
         self.f_chat_room_content.add_widget(self.entry_widget)
+        self.f_chat_room_users.add_widget(self.user_list_rv)
 
     def set_rooms(self, rooms):
         self.room_list_rv.data = [{'text': rooms[room_id].name, 'room_id': room_id} for room_id in sorted(rooms)]
+
+    def set_users(self, users):
+        temp_list = []
+        for user in users:
+            d = {}
+            d['text'] = user['user']['displayName']
+            if user['isOnline']:
+                d['lcolor'] = [0.0, 1.0, 0.0, 1.0]
+            else:
+                d['lcolor'] = [0.5, 0.5, 0.5, 1.0]
+            temp_list.append(d)
+        self.user_list_rv.data = temp_list
 
     def set_message_queue(self, queue):
         self.entry_widget.set_message_queue(queue)
@@ -126,9 +145,7 @@ class ChatWindowScreen(Screen):
         # TODO: Try to find a more efficient method than rebuilding this list
         # every time a new message is detected.
         temp_list = []
-        print("Setting messages...")
         for message in messages:
-            print("Message.")
             temp_list.append(
                 {
                    'username' : message['postedBy']['displayName'],

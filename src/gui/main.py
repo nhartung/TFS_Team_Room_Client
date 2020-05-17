@@ -16,6 +16,7 @@ sm.add_widget(login_screen)
 chat_screen = ChatWindowScreen(name='chat_window')
 sm.add_widget(chat_screen)
 
+
 class TFS_ChatApp(App):
     def build(self):
         Window.size = (1280,720)
@@ -23,12 +24,13 @@ class TFS_ChatApp(App):
 
 class GUI_Manager():
     def __init__(self):
-        self.rooms = []
         self.messages_queue = None
 
     def rooms_callback(self, rooms):
-        self.rooms = rooms
-        chat_screen.set_rooms(self.rooms)
+        chat_screen.set_rooms(rooms)
+
+    def users_callback(self, users):
+        chat_screen.set_users(users)
 
     def get_room_function(self):
         return chat_screen.get_room_id()

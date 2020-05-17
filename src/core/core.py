@@ -77,7 +77,8 @@ class Core(Thread):
             self.get_messages_event,
             self.session,
             self.callback_obj.get_room_function,
-            self.callback_obj.messages_callback)
+            self.callback_obj.messages_callback,
+            self.callback_obj.users_callback)
         self.get_messages_thread.start()
 
         self.send_messages_thread = Send_Messages_Thread(
@@ -174,12 +175,13 @@ class Get_Rooms_Thread(Thread):
         return d
 
 class Get_Messages_Thread(Thread):
-    def __init__(self, event, session, get_room_func, callback_func):
+    def __init__(self, event, session, get_room_func, messages_callback, users_callback):
         Thread.__init__(self)
         self.stopped = event
         self.session = session
         self.get_room_func = get_room_func
-        self.callback_func = callback_func
+        self.messages_callback = messages_callback
+        self.users_callback = users_callback
         self.last_room_update = datetime.date(1970, 1, 1)
         self.room_id = None
 
@@ -206,13 +208,15 @@ class Get_Messages_Thread(Thread):
         if self.last_room_update != last_update_time:
             self.last_room_update = last_update_time
             messages = get_room_messages(self.session, BASE_URL, self.room_id)
-            self.callback_func(messages)
+            self.messages_callback(messages)
 
     def _get_room_text(self):
         last_update_time = self._get_last_update_time()
         self.last_room_update = last_update_time
         messages = get_room_messages(self.session, BASE_URL, self.room_id)
-        self.callback_func(messages)
+        self.messages_callback(messages)
+        users = get_users(self.session, BASE_URL, self.room_id)
+        self.users_callback(users)
 
     def _get_last_update_time(self):
         latest_update = get_room_info(self.session, BASE_URL, self.room_id)['lastActivity']
