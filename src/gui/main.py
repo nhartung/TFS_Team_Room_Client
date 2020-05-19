@@ -1,4 +1,5 @@
 from core.core import Core
+from core.app_manager import App_Manager
 
 from gui.chat_window import ChatWindowScreen
 from gui.login_screen import LoginScreen
@@ -11,7 +12,6 @@ from threading import Thread
 
 sm = ScreenManager()
 login_screen = LoginScreen(name='login')
-login_screen.set_sm(sm)
 sm.add_widget(login_screen)
 chat_screen = ChatWindowScreen(name='chat_window')
 sm.add_widget(chat_screen)
@@ -22,7 +22,7 @@ class TFS_ChatApp(App):
         Window.size = (1280,720)
         return sm
 
-class GUI_Manager():
+class GUI_Manager(App_Manager):
     def __init__(self):
         self.messages_queue = None
 
@@ -53,6 +53,9 @@ class GUI_Manager():
 
     def set_message_queue(self, queue):
         chat_screen.set_message_queue(queue)
+
+    def set_login_queue(self, queue):
+        login_screen.set_login_queue(queue)
 
 def main():
     manager = GUI_Manager()

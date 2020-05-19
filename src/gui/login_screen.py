@@ -1,3 +1,5 @@
+from queue import Queue, Empty
+
 from kivy.core.window import Window
 
 from kivy.lang.builder import Builder
@@ -12,7 +14,7 @@ class LoginScreen(Screen):
         super(Screen, self).__init__()
         self.username = None
         self.password = None
-        self.entry_ready = False
+        self.queue = None
         Window.bind(on_key_down=self._on_keyboard_down)
 
     def _on_keyboard_down(self, instance, keyboard, keycode, text, modifiers):
@@ -20,10 +22,8 @@ class LoginScreen(Screen):
         if keycode == ENTER_KEY:
             self._login()
 
-    def set_sm(self, sm):
-        self.sm = sm
-
     def _login(self):
-        self.username = self.f_username.text
-        self.password = self.f_password.text
-        self.entry_ready = True
+        self.queue.put((self.f_username.text, self.f_password.text))
+
+    def set_login_queue(self, queue):
+        self.queue = queue

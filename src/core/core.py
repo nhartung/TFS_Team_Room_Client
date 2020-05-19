@@ -25,13 +25,18 @@ class Core(Thread):
         Thread.__init__(self)
         self.callback_obj = callback_obj
         self.stopped = Event()
+
+        self.login_queue = Queue()
+        callback_obj.set_login_queue(self.login_queue)
         self.login_event = Event()
         self.login_thread = Login_Thread(
             self.login_event, 
             self.callback_obj.login_function, 
             self.callback_obj.login_ready_function, 
             self._login_success, 
-            self._login_failure)
+            self._login_failure,
+            self.login_queue)
+
         self.get_rooms_thread = None
         self.get_messages_thread = None
         self.get_rooms_event = Event()
@@ -114,37 +119,35 @@ class Login_Thread(Thread):
             login_func, 
             login_ready_func, 
             login_success_callback, 
-            login_failure_callback
+            login_failure_callback,
+            login_queue,
     ):
         Thread.__init__(self)
         self.login_func = login_func
         self.login_ready_func = login_ready_func
         self.login_success_callback = login_success_callback
         self.login_failure_callback = login_failure_callback
+        self.queue = login_queue
         self.stopped = event
         self.session = None
-        self.logged_in = False
 
     def run(self):
         username = None
         password = None
-        while not self.logged_in:
-            while not self.stopped.wait(1) and not self.login_ready_func():
-                pass
-            if self.stopped.isSet():
-                break
-            if self.login_ready_func():
-                username, password = self.login_func()
+        while not self.stopped.wait(0.1):
+            try:
+                username, password = self.queue.get(block=True, timeout=1)
                 self.session = get_session(username, password)
-                try:
-                    get_available_rooms(self.session, BASE_URL)
-                    self.login_success_callback()
-                    self.logged_in = True
-                    self.stopped.set()
-                except TFS_Chat_Exception:
-                    username = None
-                    password = None
-                    self.login_failure_callback("Login failed.")
+                self.queue.task_done()
+                get_available_rooms(self.session, BASE_URL)
+                self.login_success_callback()
+                self.stopped.set()
+            except Empty:
+                # This exception is part of the normal flow is the user has not
+                # sent a message in the last timeout period. Simply passing.
+                pass
+            except TFS_Chat_Exception:
+                self.login_failure_callback("Login failed.")
 
 class Get_Rooms_Thread(Thread):
     def __init__(self, event, session, callback_func):
