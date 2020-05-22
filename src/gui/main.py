@@ -26,23 +26,14 @@ class GUI_Manager(App_Manager):
     def __init__(self):
         self.messages_queue = None
 
-    def rooms_callback(self, rooms):
+    def room_provider_callback(self, rooms):
         chat_screen.set_rooms(rooms)
 
-    def users_callback(self, users):
+    def user_provider_callback(self, users):
         chat_screen.set_users(users)
 
-    def get_room_function(self):
-        return chat_screen.get_room_id()
-
-    def messages_callback(self, messages):
+    def message_provider_callback(self, messages):
         chat_screen.set_messages(messages)
-
-    def login_ready_function(self):
-        return login_screen.entry_ready
-
-    def login_function(self):
-        return (login_screen.username, login_screen.password)
 
     def login_success_callback(self):
         sm.current = 'chat_window'
@@ -50,6 +41,9 @@ class GUI_Manager(App_Manager):
     def login_failure_callback(self, reason):
         print("Reason: " + reason)
         login_screen.entry_ready = False
+
+    def get_selected_room(self):
+        return chat_screen.get_room_id()
 
     def set_message_queue(self, queue):
         chat_screen.set_message_queue(queue)
