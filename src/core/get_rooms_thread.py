@@ -4,9 +4,9 @@ from back_end.tfs_rest import (
     get_available_rooms
 )
 
+from core.config_reader import get_base_url
 from core.room import Room
 
-BASE_URL = 'http://hv-tfs:8080/tfs/Engineering Organization/'
 class Get_Rooms_Thread(Thread):
     def __init__(self, event, session, callback_func):
         Thread.__init__(self)
@@ -21,7 +21,7 @@ class Get_Rooms_Thread(Thread):
         # TODO, replace time with a configurable option.
         while first or not self.stopped.wait(10):
             first = False
-            response = get_available_rooms(self.session, BASE_URL)
+            response = get_available_rooms(self.session, get_base_url())
             if self.last_response != response:
                 self.last_response = response
                 self.rooms = self._build_rooms(self.last_response)

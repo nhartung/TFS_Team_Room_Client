@@ -12,7 +12,8 @@ from back_end.tfs_rest import (
     leave_room
 )
 
-BASE_URL = 'http://hv-tfs:8080/tfs/Engineering Organization/'
+from core.config_reader import get_base_url
+
 class Room_Data_Thread(Thread):
     def __init__(self, event, session, get_room_func, messages_callback, users_callback):
         Thread.__init__(self)
@@ -33,7 +34,7 @@ class Room_Data_Thread(Thread):
                     self._get_updated_text()
                 else:
                     # New Room
-                    user_id = get_my_user_id(self.session, BASE_URL)
+                    user_id = get_my_user_id(self.session, get_base_url())
                     if last_room_id is not None:
                         self._leave_room(last_room_id, user_id)
                     self._join_room(user_id)
@@ -46,31 +47,31 @@ class Room_Data_Thread(Thread):
         last_update_time = self._get_last_update_time()
         if self.last_room_update != last_update_time:
             self.last_room_update = last_update_time
-            messages = get_room_messages(self.session, BASE_URL, self.room_id)
+            messages = get_room_messages(self.session, get_base_url(), self.room_id)
             self.messages_callback(messages)
 
     def _get_room_text(self):
         last_update_time = self._get_last_update_time()
         self.last_room_update = last_update_time
-        messages = get_room_messages(self.session, BASE_URL, self.room_id)
+        messages = get_room_messages(self.session, get_base_url(), self.room_id)
         self.messages_callback(messages)
-        users = get_users(self.session, BASE_URL, self.room_id)
+        users = get_users(self.session, get_base_url(), self.room_id)
         self.users_callback(users)
 
     def _get_last_update_time(self):
-        latest_update = get_room_info(self.session, BASE_URL, self.room_id)['lastActivity']
+        latest_update = get_room_info(self.session, get_base_url(), self.room_id)['lastActivity']
         last_update_time = (
             datetime.datetime.strptime(latest_update,'%Y-%m-%dT%H:%M:%S.%fZ'))
         return last_update_time
     
     def _join_room(self, user_id):
         try:
-            join_room(self.session, BASE_URL, self.room_id, user_id)
+            join_room(self.session, get_base_url(), self.room_id, user_id)
         except TFS_Chat_Exception:
             print("Failed to join room!")
 
     def _leave_room(self, room_id, user_id):
         try:
-            leave_room(self.session, BASE_URL, room_id, user_id)
+            leave_room(self.session, get_base_url(), room_id, user_id)
         except TFS_Chat_Exception:
             print("Failed to leave room!")

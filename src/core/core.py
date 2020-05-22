@@ -6,7 +6,6 @@ from core.login_thread import Login_Thread
 from core.send_messages_thread import Send_Messages_Thread
 from core.room_data_thread import Room_Data_Thread
 
-BASE_URL = 'http://hv-tfs:8080/tfs/Engineering Organization/'
 class Core(Thread):
     def __init__(self, callback_obj):
         Thread.__init__(self)

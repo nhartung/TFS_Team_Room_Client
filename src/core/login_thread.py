@@ -7,7 +7,8 @@ from back_end.tfs_rest import (
     TFS_Chat_Exception
 )
 
-BASE_URL = 'http://hv-tfs:8080/tfs/Engineering Organization/'
+from core.config_reader import get_base_url, get_domain
+
 class Login_Thread(Thread):
     def __init__(
             self, 
@@ -29,9 +30,13 @@ class Login_Thread(Thread):
         while not self.stopped.wait(0.1):
             try:
                 username, password = self.queue.get(block=True, timeout=1)
-                self.session = get_session(username, password)
+                domain = get_domain()
+                if domain:
+                    self.session = get_session(domain + '\\' + username, password)
+                else:
+                    self.session = get_session(username, password)
                 self.queue.task_done()
-                get_available_rooms(self.session, BASE_URL)
+                get_available_rooms(self.session, get_base_url())
                 self.login_success_callback()
                 self.stopped.set()
             except Empty:

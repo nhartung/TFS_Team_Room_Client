@@ -77,7 +77,7 @@ def _delete_request(session, url, data = {}, params = {}, headers = {}):
 def get_session(username, password):
     session = None
     session = requests.Session()
-    session.auth = HttpNtlmAuth(f'ACA\\{username}', password)
+    session.auth = HttpNtlmAuth(username, password)
     headers = {'user-agent'   : 'TFS-Team-Room-Client',
                'Accept'       : 'application/json;odata=verbose',
                'content-type' : 'application/json',
