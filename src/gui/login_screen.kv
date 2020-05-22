@@ -3,37 +3,51 @@
    f_password: password
    f_button: button
    f_user_label: user_label
-   GridLayout:
-      rows: 4
-      cols: 1
+   BoxLayout:
       Widget:
-         size_hint: 1, 1
-      GridLayout:
-         size_hint: 0.5, 0.5
-         rows: 2
-         cols: 2
-         padding: 10
-         spacing: 10
-         Label:
-            id: user_label
-            text: 'User Name:'
-            size_hint: 0.1, 1
-         TextInput:
-            id: username
-            multiline: False
-            write_tab: False
-         Label:
-            text: 'Password:'
-            size_hint: 0.1, 1
-         TextInput:
-            id: password
-            multiline: False
-            write_tab: False
-            password: True
-      Button:
-         size_hint: 0.25, 0.25
-         text: 'Login'
-         id: button
-         on_press: root._login()
+         size_hint: 0.35, 1
+      BoxLayout:
+         orientation: 'vertical'
+         Widget:
+            size_hint: 1, 1
+         GridLayout:
+            rows: 2
+            cols: 2
+            size_hint: 1, None
+            height: self.minimum_height
+            padding: 10
+            spacing: 10
+            Label:
+               id: user_label
+               text: 'User Name:'
+               size_hint: None, None
+               width: self.texture_size[0]
+               height: dp(30)
+            TextInput:
+               id: username
+               multiline: False
+               write_tab: False
+               size_hint: 1, None
+               height: dp(30)
+            Label:
+               text: 'Password:'
+               size_hint: None, None
+               width: self.texture_size[0]
+               height: dp(30)
+            TextInput:
+               id: password
+               multiline: False
+               write_tab: False
+               password: True
+               size_hint: 1, None
+               height: dp(30)
+         Button:
+            text: 'Login'
+            id: button
+            on_press: root._login()
+            size_hint: 1, None
+            height: dp(30)
+         Widget:
+            size_hint: 1, 1
       Widget:
-         size_hint: 1, 1
+         size_hint: 0.35, 1
