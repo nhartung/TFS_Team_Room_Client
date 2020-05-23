@@ -1,8 +1,12 @@
 [tool.poetry]
-name = "tfs-team-room-client"
+name = "TFS_ChatClient"
 version = "0.1.0"
-description = ""
+description = "A front-end chat client for the TFS 2015 back-end."
 authors = ["Nick Hartung <nickhartung@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/nhartung/TFS_Team_Room_Client"
+keywords = ["tfs", "chat", "client"]
 
 [tool.poetry.dependencies]
 python = "^3.7"
@@ -16,6 +20,9 @@ kivy = "^1.11.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
+
+[tool.poetry.scripts]
+gui = "src.gui.main:main"
 
 [build-system]
 requires = ["poetry>=0.12"]

@@ -17,7 +17,7 @@ from kivy.uix.recycleboxlayout import RecycleBoxLayout
 from kivy.uix.recycleview.layout import LayoutSelectionBehavior
 from kivy.uix.screenmanager import Screen
 
-Builder.load_file('src/gui/chat_window.kv')
+Builder.load_file('TFS_ChatClient/gui/chat_window.kv')
 
 # There's probably a more elegant way than using a global variable here.
 selected_room_id = None

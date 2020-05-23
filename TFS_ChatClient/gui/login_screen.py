@@ -6,7 +6,7 @@ from kivy.lang.builder import Builder
 
 from kivy.uix.screenmanager import Screen
 
-Builder.load_file('src/gui/login_screen.kv')
+Builder.load_file('TFS_ChatClient/gui/login_screen.kv')
 
 from core.config_reader import get_domain
 
