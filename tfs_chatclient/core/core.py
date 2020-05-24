@@ -1,10 +1,10 @@
 from threading import Thread, Event
 from queue import Queue
 
-from core.get_rooms_thread import Get_Rooms_Thread
-from core.login_thread import Login_Thread
-from core.send_messages_thread import Send_Messages_Thread
-from core.room_data_thread import Room_Data_Thread
+from tfs_chatclient.core.get_rooms_thread import Get_Rooms_Thread
+from tfs_chatclient.core.login_thread import Login_Thread
+from tfs_chatclient.core.send_messages_thread import Send_Messages_Thread
+from tfs_chatclient.core.room_data_thread import Room_Data_Thread
 
 class Core(Thread):
     def __init__(self, callback_obj):

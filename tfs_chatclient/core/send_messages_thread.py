@@ -1,11 +1,11 @@
 from threading import Thread
 from queue import Empty
 
-from back_end.tfs_rest import (
+from tfs_chatclient.back_end.tfs_rest import (
     send_message
 )
 
-from core.config_reader import get_base_url
+from tfs_chatclient.core.config_reader import get_base_url
 
 class Send_Messages_Thread(Thread):
     def __init__(self, event, session, queue, get_room_func):

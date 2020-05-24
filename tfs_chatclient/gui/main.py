@@ -1,8 +1,8 @@
-from core.core import Core
-from core.app_manager import App_Manager
+from tfs_chatclient.core.core import Core
+from tfs_chatclient.core.app_manager import App_Manager
 
-from gui.chat_window import ChatWindowScreen
-from gui.login_screen import LoginScreen
+from tfs_chatclient.gui.chat_window import ChatWindowScreen
+from tfs_chatclient.gui.login_screen import LoginScreen
 
 from kivy.app import App
 from kivy.core.window import Window
@@ -58,3 +58,6 @@ def main():
     TFS_ChatApp().run()
     core.stop()
     core.join()
+
+if __name__ == "__main__":
+    main()

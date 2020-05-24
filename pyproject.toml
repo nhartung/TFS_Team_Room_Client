@@ -22,7 +22,7 @@ kivy = "^1.11.1"
 pytest = "^5.2"
 
 [tool.poetry.scripts]
-gui = "src.gui.main:main"
+tfs_chatclient-gui = "tfs_chatclient.gui:main"
 
 [build-system]
 requires = ["poetry>=0.12"]

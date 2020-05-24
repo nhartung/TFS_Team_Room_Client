@@ -2,7 +2,7 @@ import datetime
 from threading import Thread
 from queue import Empty
 
-from back_end.tfs_rest import (
+from tfs_chatclient.back_end.tfs_rest import (
     TFS_Chat_Exception,
     get_my_user_id,
     get_room_messages,
@@ -12,7 +12,7 @@ from back_end.tfs_rest import (
     leave_room
 )
 
-from core.config_reader import get_base_url
+from tfs_chatclient.core.config_reader import get_base_url
 
 class Room_Data_Thread(Thread):
     def __init__(self, event, session, get_room_func, messages_callback, users_callback):

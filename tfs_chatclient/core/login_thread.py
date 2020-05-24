@@ -1,13 +1,13 @@
 from threading import Thread 
 from queue import Empty
 
-from back_end.tfs_rest import (
+from tfs_chatclient.back_end.tfs_rest import (
     get_available_rooms,
     get_session,
     TFS_Chat_Exception
 )
 
-from core.config_reader import get_base_url, get_domain
+from tfs_chatclient.core.config_reader import get_base_url, get_domain
 
 class Login_Thread(Thread):
     def __init__(

@@ -1,11 +1,11 @@
 from threading import Thread
 
-from back_end.tfs_rest import (
+from tfs_chatclient.back_end.tfs_rest import (
     get_available_rooms
 )
 
-from core.config_reader import get_base_url
-from core.room import Room
+from tfs_chatclient.core.config_reader import get_base_url
+from tfs_chatclient.core.room import Room
 
 class Get_Rooms_Thread(Thread):
     def __init__(self, event, session, callback_func):

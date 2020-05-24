@@ -8,7 +8,7 @@ from kivy.uix.screenmanager import Screen
 
 Builder.load_file('TFS_ChatClient/gui/login_screen.kv')
 
-from core.config_reader import get_domain
+from tfs_chatclient.core.config_reader import get_domain
 
 class LoginScreen(Screen):
 
