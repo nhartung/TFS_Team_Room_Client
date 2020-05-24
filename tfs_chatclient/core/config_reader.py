@@ -4,7 +4,7 @@ config_data = None
 
 def load_configuration():
     global config_data
-    config_data = json.load(open('./tfs_chatclient/tfs_config.json'))
+    config_data = json.load(open('./tfs_config.json'))
 
 def get_domain():
     if not config_data:
