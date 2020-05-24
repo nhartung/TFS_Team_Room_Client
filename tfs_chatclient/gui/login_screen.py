@@ -1,15 +1,15 @@
 from queue import Queue, Empty
 
 from kivy.core.window import Window
-
 from kivy.lang.builder import Builder
-
 from kivy.uix.screenmanager import Screen
 
-Builder.load_file('TFS_ChatClient/gui/login_screen.kv')
+import os
 
 from tfs_chatclient.core.config_reader import get_domain
 
+KV_FILE = os.path.join(os.path.dirname(__file__), 'login_screen.kv')
+Builder.load_file(KV_FILE)
 class LoginScreen(Screen):
 
     def __init__(self, **kwargs):

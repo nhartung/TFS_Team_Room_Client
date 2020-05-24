@@ -1,5 +1,3 @@
-import re
-
 from kivy.factory import Factory
 
 from kivy.lang.builder import Builder
@@ -17,7 +15,11 @@ from kivy.uix.recycleboxlayout import RecycleBoxLayout
 from kivy.uix.recycleview.layout import LayoutSelectionBehavior
 from kivy.uix.screenmanager import Screen
 
-Builder.load_file('TFS_ChatClient/gui/chat_window.kv')
+import os
+import re
+
+KV_FILE = os.path.join(os.path.dirname(__file__), 'chat_window.kv')
+Builder.load_file(KV_FILE)
 
 # There's probably a more elegant way than using a global variable here.
 selected_room_id = None
