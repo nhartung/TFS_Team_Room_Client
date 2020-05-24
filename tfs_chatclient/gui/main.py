@@ -20,6 +20,7 @@ sm.add_widget(chat_screen)
 class TFS_ChatApp(App):
     def build(self):
         Window.size = (1280,720)
+        Window.clearcolor = (0.1725, 0.1843, 0.2, 1)
         return sm
 
 class GUI_Manager(App_Manager):
